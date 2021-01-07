@@ -20,8 +20,9 @@
 
 (comment
   (app {:request-method :get
-        :uri "/v1/recipes"})
+        :uri "/swagger.json"})
   (go)
   (halt)
   (reset)
   (reset))
+
