@@ -23,6 +23,8 @@
 (comment
   (app {:request-method :get
         :uri "/swagger.json"})
+  (app {:request-method :get
+        :uri "/v1/recipes/1234-a"})
   (jdbc/execute! db ["SELECT * FROM recipe WHERE public = true"])
   (sql/find-by-keys db :recipe {:public false})
   (go)
