@@ -24,7 +24,7 @@
   (app {:request-method :get
         :uri "/swagger.json"})
   (jdbc/execute! db ["SELECT * FROM recipe WHERE public = true"])
-  (sql/find-by-keys db :recipe {:public true})
+  (sql/find-by-keys db :recipe {:public false})
   (go)
   (halt)
   (reset)
