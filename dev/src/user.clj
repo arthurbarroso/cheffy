@@ -25,6 +25,13 @@
         :uri "/swagger.json"})
   (app {:request-method :get
         :uri "/v1/recipes/1234-a"})
+  (-> (app {:request-method :post
+            :uri "/v1/recipes"
+            :body-params {:name "my recipe"
+                          :prep-time 49
+                          :img "image-url"}})
+      :body
+      (slurp))
   (jdbc/execute! db ["SELECT * FROM recipe WHERE public = true"])
   (sql/find-by-keys db :recipe {:public false})
   (go)

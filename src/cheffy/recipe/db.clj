@@ -21,3 +21,13 @@
           :recipe/ingredients ingredients
           :recipe/steps steps)
         ))))
+
+(defn insert-recipe!
+  [db {:keys [recipe-id uid name prep-time img]}]
+  (sql/insert! db :recipe {:recipe_id recipe-id
+                           :uid uid
+                           :name name
+                           :prep_time prep-time
+                           :public false
+                           :img img
+                           :favorite_count 0}))
