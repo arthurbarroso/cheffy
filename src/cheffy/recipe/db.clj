@@ -1,6 +1,7 @@
 (ns cheffy.recipe.db
   (:require [next.jdbc.sql :as sql]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [clojure.string :as str]))
 
 (defn find-all-recipes [db uid]
   (with-open [conn (jdbc/get-connection db)]
@@ -22,12 +23,8 @@
           :recipe/steps steps)
         ))))
 
+
 (defn insert-recipe!
-  [db {:keys [recipe-id uid name prep-time img]}]
-  (sql/insert! db :recipe {:recipe_id recipe-id
-                           :uid uid
-                           :name name
-                           :prep_time prep-time
-                           :public false
-                           :img img
-                           :favorite_count 0}))
+  [db recipe]
+  (sql/insert! db :recipe (assoc recipe :public false
+                                        :favorite-count 0)))
