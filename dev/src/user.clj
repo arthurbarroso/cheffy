@@ -32,6 +32,18 @@
                           :img "image-url"}})
       :body
       (slurp))
+  (->  (app {:request-method :put
+             :uri "/v1/recipes/a3dde84c-4a33-45aa-b0f3-4bf9ac997680"
+             :body-params {:name "chiclete"
+                           :prep-time 49
+                           :public false
+                           :img "url"}}) :body (slurp))
+  (app {:request-method :put
+        :uri "/v1/recipes/a3dde84c-4a33-45aa-b0f3-4bf9ac997680"
+        :body-params {:name "chiclete"
+                      :prep-time 49
+                      :public false
+                      :img "url"}})
   (jdbc/execute! db ["SELECT * FROM recipe WHERE public = true"])
   (sql/find-by-keys db :recipe {:public false})
   (go)
