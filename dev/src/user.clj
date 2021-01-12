@@ -24,7 +24,9 @@
   (app {:request-method :get
         :uri "/swagger.json"})
   (app {:request-method :get
-        :uri "/v1/recipes/1234-a"})
+        :uri "/v1/recipes"})
+  (-> (app {:request-method :get
+            :uri "/v1/recipes"}) :body (slurp))
   (-> (app {:request-method :post
             :uri "/v1/recipes"
             :body-params {:name "my recipe"

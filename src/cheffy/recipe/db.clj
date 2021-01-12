@@ -3,14 +3,15 @@
             [next.jdbc :as jdbc]
             [clojure.string :as str]))
 
-(defn find-all-recipes [db uid]
+(defn find-all-recipes
+  [db uid]
   (with-open [conn (jdbc/get-connection db)]
     (let [public (sql/find-by-keys conn :recipe {:public true})]
       (if uid
         (let [drafts (sql/find-by-keys conn :recipe {:public false :uid uid})]
           {:public public
-           :drafts drafts}))
-      {:public public})))
+           :drafts drafts})
+        {:public public}))))
 
 (defn find-recipe-by-id [db recipe-id]
   (with-open [conn (jdbc/get-connection db)]
