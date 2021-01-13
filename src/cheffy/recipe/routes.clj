@@ -1,10 +1,12 @@
 (ns cheffy.recipe.routes
   (:require [cheffy.recipe.handlers :as recipe]
-            [cheffy.responses :as responses]))
+            [cheffy.responses :as responses]
+            [cheffy.middleware :as mw]))
 
 (defn routes [env]
   (let [db (:jdbc-url env)]
-    ["/recipes" {:swagger {:tags ["recipes"]}}
+    ["/recipes" {:swagger {:tags ["recipes"]}
+                 :middleware [[mw/wrap-auth0]]}
      [""
       {:get  {:handler   (recipe/list-recipes db)
               :responses {200 {:body responses/recipes}}
