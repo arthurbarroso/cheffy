@@ -34,17 +34,17 @@
       (is (= 201 status))))
 
   (testing "Update recipe"
-    (let [{:keys [status body]} (ts/test-endpoint :put (str "/v1/recipes/" @recipe-id) {:auth true :body update-recipe})]
+    (let [{:keys [status]} (ts/test-endpoint :put (str "/v1/recipes/" @recipe-id) {:auth true :body update-recipe})]
       (is (= status 204))))
 
   (testing "Delete recipe"
-    (let [{:keys [status body]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id) {:auth true :body recipe})]
+    (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id) {:auth true :body recipe})]
       (is (= 204 status)))))
 
 
 (comment
   (ts/test-endpoint :post "/v1/recipes" {:auth true
                                          :body recipe})
-  (ts/test-endpoint :put "/v1/recipes/0bfed7c3-566e-4772-88db-ed4bd61deb81" {:auth true
+  (ts/test-endpoint :put "/v1/recipes/79fc1d97-2dca-4698-a23a-09ace63b976e" {:auth true
                                                                              :body update-recipe})
   (ts/test-endpoint :delete "/v1/recipes/0bfed7c3-566e-4772-88db-ed4bd61deb81" {:auth true}))

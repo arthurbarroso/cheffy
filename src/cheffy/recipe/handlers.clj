@@ -38,7 +38,9 @@
           update-successful? (recipe-db/update-recipe! db (assoc recipe :recipe-id recipe-id))]
       (if update-successful?
         (rr/status 204)
-        (rr/not-found {:recipe-id recipe-id})))))
+        (rr/not-found {:type    "recipe-not-found"
+                       :message "Recipe not found"
+                       :data    (str "recipe-id " recipe-id)})))))
 
 (defn delete-recipe!
   [db]
@@ -47,4 +49,6 @@
           deleted? (recipe-db/delete-recipe! db {:recipe-id recipe-id})]
       (if deleted?
         (rr/status 204)
-        (rr/not-found {:recipe-id recipe-id})))))
+        (rr/not-found {:type    "recipe-not-found"
+                       :message "Recipe not found"
+                       :data    (str "recipe-id " recipe-id)})))))
