@@ -48,6 +48,7 @@
                       :img "url"}})
   (jdbc/execute! db ["SELECT * FROM recipe WHERE public = true"])
   (sql/find-by-keys db :recipe {:public false})
+  (jdbc/execute! db ["SELECT * FROM account"])
   (go)
   (halt)
   (reset)
