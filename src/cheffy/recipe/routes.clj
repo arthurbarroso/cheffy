@@ -35,6 +35,24 @@
                  :parameters {:path {:recipe-id string?}}
                  :responses  {204 {:body nil?}}
                  :summary    "Delete recipe"}}]
+      ["/steps"
+       {:post    {:handler    (recipe/create-step! db)
+                  :parameters {:path {:recipe-id string?}
+                               :body {:description string? :sort number?}}
+                  :responses  {201 {:body {:step-id string?}}}
+                  :summary    "Create step"}
+        :put    {:handler    (recipe/update-step! db)
+                 :middleware [[mw/wrap-recipe-owner db]]
+                 :parameters {:path {:recipe-id string?}
+                              :body {:step-id string? :description string? :sort number?}}
+                 :responses  {204 {:body nil?}}
+                 :summary    "Update step"}
+        :delete {:handler    (recipe/delete-step! db)
+                 :middleware [[mw/wrap-recipe-owner db]]
+                 :parameters {:path {:recipe-id string?}
+                              :body {:step-id string?}}
+                 :responses  {204 {:body nil?}}
+                 :summary    "Delete step"}}]
       ["/favorite"
        {:post    {:handler    (recipe/favorite-recipe! db)
                   :parameters {:path {:recipe-id string?}}

@@ -59,3 +59,19 @@
                                                   WHERE recipe_id = ?" recipe-id]))
       :next.jdbc/update-count
       (pos?)))
+
+(defn insert-step!
+  [db step]
+  (sql/insert! db :step step))
+
+(defn update-step!
+  [db step]
+  (-> (sql/update! db :step step (select-keys step [:step-id]))
+      :next.jdbc/update-count
+      (pos?)))
+
+(defn delete-step!
+  [db step]
+  (-> (sql/delete! db :step step)
+      :next.jdbc/update-count
+      (pos?)))

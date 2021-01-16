@@ -7,10 +7,16 @@
 
 (def recipe-id (atom nil))
 
+(def step-id (atom nil))
+
 (def recipe
   {:img       "https://images.unsplash.com/photo-1547516508-4c1f9c7c4ec3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3318&q=80"
    :prep-time 30
    :name      "My Test Recipe"})
+
+(def step
+  {:description "cool step :)"
+  :sort 1})
 
 (def update-recipe
   (assoc recipe :public true))
@@ -45,12 +51,35 @@
 
   (testing "Unfavorite recipe"
     (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id "/favorite") {:auth true :body recipe})]
-      (is (= 204 status)))))
+      (is (= 204 status))))
 
-  
+  (testing "Create step"
+    (let [{:keys [status body]} (ts/test-endpoint :post (str "/v1/recipes/" @recipe-id "/steps")
+                                                  {:auth true :body step})]
+      (reset! step-id (:step-id body))
+      (is (= 201 status))))
+
+  (testing "Update step"
+    (let [{:keys [status]} (ts/test-endpoint :put (str "/v1/recipes/" @recipe-id "/steps")
+                                             {:auth true :body
+                                                          {:step-id @step-id
+                                                          :sort 2
+                                                          :description "updated step"}})]
+      (is (= status 204))))
+
+  (testing "Delete step"
+    (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id "/steps")
+                                             {:auth true :body {:step-id @step-id}})]
+      (is (= status 204))))
+
   (testing "Delete recipe"
     (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id) {:auth true :body recipe})]
       (is (= 204 status))))
+
+  )
+
+
+
 
 
 (comment
