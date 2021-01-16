@@ -38,5 +38,24 @@
 (defn delete-recipe!
   [db recipe]
   (-> (sql/delete! db :recipe recipe)
-      ::jdbc/update-count
+      :next.jdbc/update-count
+      (pos?)))
+
+(defn favorite-recipe!
+  [db {:keys [recipe-id] :as data}]
+  (jdbc/with-transaction [tx db]
+                         (sql/insert! tx :recipe-favorite data (:options db))
+                         (jdbc/execute-one! tx ["UPDATE recipe
+                          SET favorite_count = favorite_count + 1
+                          WHERE recipe_id = ?" recipe-id])))
+
+(defn unfavorite-recipe!
+  [db {:keys [recipe-id] :as data}]
+  (-> (jdbc/with-transaction [tx db]
+                             (sql/delete! tx :recipe-favorite data (:options db))
+                             (jdbc/execute-one! tx
+                                                ["UPDATE recipe
+                                                  SET favorite_count = favorite_count - 1
+                                                  WHERE recipe_id = ?" recipe-id]))
+      :next.jdbc/update-count
       (pos?)))
