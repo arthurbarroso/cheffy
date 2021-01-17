@@ -9,6 +9,8 @@
 
 (def step-id (atom nil))
 
+(def ingredient-id (atom nil))
+
 (def recipe
   {:img       "https://images.unsplash.com/photo-1547516508-4c1f9c7c4ec3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3318&q=80"
    :prep-time 30
@@ -17,6 +19,12 @@
 (def step
   {:description "cool step :)"
   :sort 1})
+
+(def ingredient
+  {:sort 1
+   :amount 2
+   :measure "30 grams"
+   :name "flour"})
 
 (def update-recipe
   (assoc recipe :public true))
@@ -71,6 +79,31 @@
     (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id "/steps")
                                              {:auth true :body {:step-id @step-id}})]
       (is (= status 204))))
+
+
+
+  (testing "Create ingredient"
+    (let [{:keys [status body]} (ts/test-endpoint :post (str "/v1/recipes/" @recipe-id "/ingredients")
+                                                  {:auth true :body ingredient})]
+      (reset! ingredient-id (:ingredient-id body))
+      (is (= 201 status))))
+
+  (testing "Update ingredient"
+    (let [{:keys [status]} (ts/test-endpoint :put (str "/v1/recipes/" @recipe-id "/ingredients")
+                                             {:auth true :body
+                                                    {:ingredient-id @ingredient-id
+                                                     :sort 2
+                                                     :amount 3
+                                                     :measure "30 grams"
+                                                     :name "updated ingredient"
+                                                     }})]
+      (is (= status 204))))
+
+  (testing "Delete ingredient"
+    (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id "/ingredients")
+                                             {:auth true :body {:ingredient-id @ingredient-id}})]
+      (is (= status 204))))
+
 
   (testing "Delete recipe"
     (let [{:keys [status]} (ts/test-endpoint :delete (str "/v1/recipes/" @recipe-id) {:auth true :body recipe})]
